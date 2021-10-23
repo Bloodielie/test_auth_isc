@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Profile</title>
+{% endblock %}
+
+{% block content %}
+<p>{{user.username}} this is your profile</p>
+<a href="{% url 'logout'%}">Click here to logout.</a>
+<a href="{% url 'signup'%}">Click here to create new account.</a>
+{% endblock %}
