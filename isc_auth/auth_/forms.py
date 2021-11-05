@@ -12,5 +12,5 @@ class SignUpForm(UserCreationForm):
 
 
 class LoginForm(forms.Form):
-    username = UsernameField(widget=forms.TextInput(attrs={'autofocus': True}))
-    password = forms.CharField(widget=forms.PasswordInput)
+    username = UsernameField(widget=forms.TextInput(attrs={'autofocus': True}), max_length=254)
+    password = forms.CharField(widget=forms.PasswordInput, max_length=254)

@@ -26,9 +26,9 @@ class LoginView(FormView):
                 login(self.request, user)
                 return redirect("profile")
 
-            form.add_error("password", "Invalid password")
+            form.add_error("password", "Invalid login or password")
         except ObjectDoesNotExist:
-            form.add_error("username", "Invalid login")
+            form.add_error("password", "Invalid login or password")
 
         return render(self.request, 'registration/login.html', {'form': form})
 
