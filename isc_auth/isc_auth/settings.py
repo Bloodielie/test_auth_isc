@@ -13,13 +13,16 @@ import os
 from distutils.util import strtobool
 from pathlib import Path
 
+import dj_database_url
 from dotenv import load_dotenv
 
 load_dotenv("../.env")
 load_dotenv(".env")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.environ.get("BASE_DIR", Path(__file__).resolve().parent.parent)
+
+# django_heroku.settings(locals())
 
 
 # Quick-start development settings - unsuitable for production
@@ -29,7 +32,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(strtobool(os.environ.get("DEBUG")))
+DEBUG = bool(strtobool(os.environ.get("DEBUG", "False")))
 
 ALLOWED_HOSTS = ['*']
 
@@ -79,21 +82,8 @@ WSGI_APPLICATION = 'isc_auth.wsgi.application'
 
 
 database_url = os.environ.get("DATABASE_URL")
-temp = database_url.partition("//")[2]
-temp, _, db_name = temp.partition("/")
-auth, _, url = temp.partition("@")
-db_user, _, db_password = auth.partition(":")
-db_host, _, db_port = url.partition(":")
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': "isc_django",
-        'USER': "postgres",
-        'PASSWORD': "1234",
-        'HOST': "localhost",
-        'PORT': "5432",
-    }
+    'default': dj_database_url.parse(database_url, conn_max_age=600, ssl_require=False)
 }
 
 
@@ -121,7 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Minsk'
 
 USE_I18N = True
 
@@ -134,8 +124,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+os.makedirs(STATIC_ROOT, exist_ok=True)
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 

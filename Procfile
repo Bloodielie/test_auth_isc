@@ -1,0 +1,1 @@
+web: cd ./isc_auth && gunicorn isc_auth.wsgi
